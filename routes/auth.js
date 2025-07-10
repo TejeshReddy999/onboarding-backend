@@ -14,7 +14,7 @@ const router = express.Router();
 router.post('/register', 
     
     [body('name').notEmpty().withMessage('Name is required'),
-    body('email').isEmail().withMessage('Valid email is required'),
+        body('email').isEmail().withMessage('Valid email is required'),
     body('password').isLength({ min: 6 }).withMessage('Password must be at least 6 characters long')], 
     
     async (req, res) => {
@@ -114,7 +114,7 @@ router.post('/login',[
             return res.status(400).json({ message: 'Invalid credentials' });
         }
 
-        if (!user.isVerfied) {
+        if (!user.isVerified) {
             return res.status(403).json({ message: 'Email not verified' });
         }
 
