@@ -1,9 +1,9 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
-import mongoose from './config/db.js';
 import authRoutes from './routes/auth.js';
 import helmet from 'helmet';
+import './config/db.js';
 
 dotenv.config();
 

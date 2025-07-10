@@ -6,7 +6,7 @@ import {body, validationResult} from 'express-validator';
 
 import User from '../models/user.js';
 import sendEmail from '../utils/sendEmail.js';
-
+import protect from '../middlewares/authMiddleware.js';
 
 const router = express.Router();
 
@@ -129,6 +129,24 @@ router.post('/login',[
     } 
     
     catch (error) {
+        res.status(500).json({ message: 'Server error', error: error.message });
+    }
+});
+
+// Profile route (protected)
+router.get('/profile', protect, async (req, res) => {
+    try {
+        // Optionally, validate req.user.id is present
+        if (!req.user || !req.user.id) {
+            return res.status(401).json({ message: 'Invalid or missing token' });
+        }
+        // Fetch user info, exclude sensitive fields
+        const user = await User.findById(req.user.id).select('-password -verificationtoken');
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+        res.status(200).json({ message: 'Profile fetched successfully', user });
+    } catch (error) {
         res.status(500).json({ message: 'Server error', error: error.message });
     }
 });
